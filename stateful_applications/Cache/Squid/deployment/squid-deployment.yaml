@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    labels:
+        app: squid
+    name: squid
+spec:
+    replicas: 2
+    selector:
+        matchLabels:
+            app: squid
+    template:
+        metadata:
+            labels:
+                app: squid
+        spec:
+            containers:
+            - name: squid
+              image: ashankar3/squid_cache_proxy:1.0.2
+              imagePullPolicy: Always
+              ports:
+              - containerPort: 3128
+                protocol: TCP
+
