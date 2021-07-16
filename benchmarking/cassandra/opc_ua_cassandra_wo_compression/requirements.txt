@@ -1,0 +1,16 @@
+opcua
+opcua-client
+pyqtgraph
+cryptography
+PyQt5
+cassandra-driver
+python-statemachine
+ipython
+pysmb
+plotly
+numpy
+flask
+matplotlib
+python-snappy
+lz4
+fastavro

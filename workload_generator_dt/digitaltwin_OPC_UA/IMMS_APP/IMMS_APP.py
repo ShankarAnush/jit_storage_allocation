@@ -921,7 +921,7 @@ def parse_args(manual_args=None):
     parser.add_argument(
         "--varSetCntPrt",
         required=False,
-        default=10000)
+        default=1000000)
 
     parser.add_argument(
         "--varSetTimCyc",

@@ -23,7 +23,7 @@ ENV SLEEP_DURATION 2
 ENV OUT_FILE /respone_time_measurements/response
 #ENV COMPRESSION snappy
 
-COPY opc_ua_cassandra.py opc_ua_cassandra.py
+COPY opc_ua_cassandra_with_compression.py opc_ua_cassandra_with_compression.py
 COPY start.sh start.sh
 RUN chmod +x start.sh
 CMD /start.sh

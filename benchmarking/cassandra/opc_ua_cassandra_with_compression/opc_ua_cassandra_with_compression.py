@@ -14,6 +14,7 @@ from datetime import datetime
 import threading
 from queue import Queue
 import _thread
+from socket import error as socket_error
 
 # set log level
 log = logging.getLogger()
@@ -38,24 +39,32 @@ NUM_QUERIES = 10000
 
 if __name__== "__main__":
 
-    # connect to opc ua server
-    opcua_client = Client("opc.tcp://%s:%s/freeopcua/server/" % (OPCUA_SERVER, OPCUA_PORT))
-    opcua_client.connect()
-    print('Connected to OPC UA server %s:%s' % (OPCUA_SERVER, OPCUA_PORT))
-    root = opcua_client.get_root_node()
-    imms = root.get_child(["0:Objects", "2:IMMS"])
+    try:
+        # connect to opc ua server
+        opcua_client = Client("opc.tcp://%s:%s/freeopcua/server/" % (OPCUA_SERVER, OPCUA_PORT))
+        opcua_client.connect()
+        print('**************************************************Connected to OPC UA server %s:%s*****************************************' % (OPCUA_SERVER, OPCUA_PORT))
+        root = opcua_client.get_root_node()
+        imms = root.get_child(["0:Objects", "2:IMMS"])
+    except socket_error as serr:
+        if serr.errno != errno.ECONNREFUSED:
+            # not connection refused error? re-raise
+            raise serr
+        # connection refused error
+        print('Connection refused on the given IP')
     
     # connect to Cassandra
     auth_provider = PlainTextAuthProvider(username='cassandra', password=PASSWORD)
     clstr = Cluster([CASSANDRA_CLUSTERIP], auth_provider=auth_provider)
     session = clstr.connect()
-    print('Connected to Cassandra %s' % (CASSANDRA_CLUSTERIP))
+    print('***********************************************Connected to Cassandra %s************************************************' % (CASSANDRA_CLUSTERIP))
 
     # check for existing keyspace
-    rows = session.execute("SELECT * FROM system.schema_keyspaces")
+    rows = session.execute("SELECT * FROM system_schema.keyspaces")
     if CASSANDRA_KEYSPACE in [row[0] for row in rows]:
         log.debug("dropping existing keyspace...")
         session.execute("DROP KEYSPACE " + CASSANDRA_KEYSPACE)
+        print('******************************************************Existing keyspace dropped***********************************************')
 
     log.debug("Creating keyspace...")
     session.execute("""
@@ -69,7 +78,7 @@ if __name__== "__main__":
     log.debug("Creating table...")
     qry = ("""
     create table %s(
-        data float,
+        date float,
         time text,
         ATActSimPara1 float,
         ATActSimPara2 float,
@@ -83,7 +92,7 @@ if __name__== "__main__":
         InstanceName text,
         TimestampSent timestamp,
         primary key(TimestampSent)
-    )""" % TABLE)
+    ) WITH compression = {'class': 'LZ4Compressor'}""" % TABLE)
     session.execute(qry)
 
     # insert values into table
