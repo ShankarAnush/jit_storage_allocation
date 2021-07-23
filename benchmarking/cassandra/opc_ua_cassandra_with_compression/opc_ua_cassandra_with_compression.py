@@ -92,7 +92,7 @@ if __name__== "__main__":
         InstanceName text,
         TimestampSent timestamp,
         primary key(TimestampSent)
-    ) WITH compression = {'class': 'LZ4Compressor'}""" % TABLE)
+    ) WITH compression = {'class': 'LZ4Compressor', 'chunk_length_in_kb': 64}""" % TABLE)
     session.execute(qry)
 
     # insert values into table
