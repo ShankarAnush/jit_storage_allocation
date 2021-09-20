@@ -11,7 +11,7 @@ if __name__ == "__main__":
 
 
     header = ['Time', 'Disk_Usage']
-    with open('rabbitmq_uncompressed_op_rate_greater.csv', 'w', encoding='UTF8') as f:
+    with open('rabbitmq_compressed_op_rate_greater.csv', 'w', encoding='UTF8') as f:
         writer = csv.writer(f)
         writer.writerow(header)
     
@@ -21,7 +21,7 @@ if __name__ == "__main__":
         try:
             disk_usage = os.popen(command).read()
             print("Current Disk Usage {}".format(disk_usage))
-            with open('rabbitmq_uncompressed_op_rate_greater.csv', 'a', encoding='UTF8') as f:
+            with open('rabbitmq_compressed_op_rate_greater.csv', 'a', encoding='UTF8') as f:
                writer = csv.writer(f)
                data = [int(time.time()), int(disk_usage)]
                writer.writerow(data)
