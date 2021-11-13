@@ -1,5 +1,5 @@
-from mysql_q_agent import QAgent
-from mysql_storage_allocator import StorageAllocator
+from cassandra_linear_q_agent import QAgent
+from cassandra_linear_storage_allocator import StorageAllocator
 import time
 import os
 import numpy as np
@@ -11,9 +11,9 @@ import csv
 
 
 def main():
-    window_size = 5
-    episode_count = 20
-    df = "sql_uncompressed_data"
+    window_size = 10
+    episode_count = 1
+    df = "cassandra_sample"
     batch_size = 32
     
     agent = QAgent(window_size)
@@ -69,9 +69,9 @@ def main():
                     writer = csv.writer(f)
                     writer.writerow(["-----------------------------------", "--------------------------------------" ])
             
-    if not os.path.exists("models/rl_storage_allocator.sav"):
+    if not os.path.exists("models/cassandra_storage_allocator.sav"):
         os.mkdir("models")
-        agent.model.save("models/rl_storage_allocator.sav")
+        agent.model.save("models/cassandra_storage_allocator.sav")
 
     end_time = time.time()
     train_time = end_time - start_time
