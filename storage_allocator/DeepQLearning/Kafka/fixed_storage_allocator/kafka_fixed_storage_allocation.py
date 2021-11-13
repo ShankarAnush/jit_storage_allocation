@@ -13,10 +13,11 @@ if __name__ == "__main__":
     counter = 0
 
     # Note the allocated disk space, unused allocated disk space and downtime
-    with open(r'fixed_storage_allocation.csv', 'w') as f:
+    with open(r'mysql_fixed_storage_allocation.csv', 'w') as f:
         writer = csv.writer(f)
         writer.writerow(['current_allocated_disk_space', 'unused_allocated_disk_space', 'total_downtime', 'predicted_disk_space'])
 
+    # Note the unused allocated disk space for that instant and do not take the cumulative unused disk space
     for i in range(0,25000):
         if i == 0:
             current_allocated_disk_space = load_model.predict([[i]])
@@ -30,18 +31,17 @@ if __name__ == "__main__":
 
         if disk_difference > 0 and disk_difference <= 100:
             current_allocated_disk_space += 100
-            unused_allocated_disk_space += 100 - disk_difference
+            unused_allocated_disk_space = 100 - disk_difference
             total_downtime += disk_difference * (1/5000)
             
         elif disk_difference > 100:
             tmp = math.floor(disk_difference / 100)
             current_allocated_disk_space += tmp * 100
-            unused_allocated_disk_space += (tmp * 100) - disk_difference
+            unused_allocated_disk_space = (tmp * 100) - disk_difference
             total_downtime += (tmp * 100) * (1/5000)
             
         elif disk_difference < 0:
-            pass
-            # unused_allocated_disk_space += (-1 * disk_difference)
+            unused_allocated_disk_space = 100 - (-1 * disk_difference)
             # when the disk difference is less than 0, 
             # application has more allocated disk compared to the required disk space
             # so no disk space allocation required. hence, no downtime
@@ -50,7 +50,7 @@ if __name__ == "__main__":
         else:
             pass   # disk space remains to be constant
 
-        with open(r'fixed_storage_allocation.csv', 'a') as f:
+        with open(r'mysql_fixed_storage_allocation.csv', 'a') as f:
             writer = csv.writer(f)
             writer.writerow([current_allocated_disk_space, unused_allocated_disk_space, total_downtime, load_model.predict([[i]])])
 
