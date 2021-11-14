@@ -11,9 +11,9 @@ import csv
 
 
 def main():
-    window_size = 5
-    episode_count = 20
-    df = "sql_uncompressed_data"
+    window_size = 10
+    episode_count = 10
+    df = "training_data_mysql"
     batch_size = 32
     
     agent = QAgent(window_size)
@@ -28,7 +28,7 @@ def main():
         writer.writerow(['rewards_per_episode', 'downtime_per_episode'])
 
     # Note disk_space every iteration
-    with open(r'disk_space.csv', 'w') as f:
+    with open(r'disk_space_training_model.csv', 'w') as f:
         writer = csv.writer(f)
         writer.writerow(['timeslot', 'disk_space'])
 
@@ -65,12 +65,16 @@ def main():
                     writer = csv.writer(f)
                     writer.writerow([cumulative_reward, agent.get_total_downtime()])
 
-                with open(r'disk_space.csv', 'a') as f:
+                with open(r'disk_space_training_model.csv', 'a') as f:
                     writer = csv.writer(f)
                     writer.writerow(["-----------------------------------", "--------------------------------------" ])
             
     if not os.path.exists("models/rl_storage_allocator.sav"):
-        os.mkdir("models")
+        try:
+            os.mkdir("models")
+        except FileExistsError:
+            print("Models folder already exists")
+
         agent.model.save("models/rl_storage_allocator.sav")
 
     end_time = time.time()
