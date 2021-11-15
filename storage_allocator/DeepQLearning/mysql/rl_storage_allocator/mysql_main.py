@@ -12,7 +12,7 @@ import csv
 
 def main():
     window_size = 10
-    episode_count = 10
+    episode_count = 20
     df = "training_data_mysql"
     batch_size = 32
     
@@ -50,7 +50,7 @@ def main():
             state = next_state
             disk_usage_data = next_disk_space
             
-            with open(r'disk_space.csv', 'a') as f:
+            with open(r'disk_space_training_model.csv', 'a') as f:
                 writer = csv.writer(f)
                 writer.writerow([t, allocated_disk_space])
 
@@ -69,13 +69,13 @@ def main():
                     writer = csv.writer(f)
                     writer.writerow(["-----------------------------------", "--------------------------------------" ])
             
-    if not os.path.exists("models/rl_storage_allocator.sav"):
+    if not os.path.exists("models/rl_storage_allocator.h5"):
         try:
             os.mkdir("models")
         except FileExistsError:
             print("Models folder already exists")
 
-        agent.model.save("models/rl_storage_allocator.sav")
+        agent.model.save("models/rl_storage_allocator.h5")
 
     end_time = time.time()
     train_time = end_time - start_time

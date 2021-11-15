@@ -10,8 +10,8 @@ from mysql_storage_allocator import StorageAllocator
 import matplotlib.pyplot as plt
 
 def main():
-    test_file = "predicted_disk_usage"
-    model_name = "rl_storage_allocator.sav"
+    test_file = "mysql_testing_data"
+    model_name = "rl_storage_allocator.h5"
 
     model = load_model("./models/" + model_name)
     window_size = model.layers[0].input.shape.as_list()[1]
