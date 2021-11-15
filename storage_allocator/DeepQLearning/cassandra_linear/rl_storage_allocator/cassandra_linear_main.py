@@ -12,8 +12,8 @@ import csv
 
 def main():
     window_size = 10
-    episode_count = 1
-    df = "cassandra_sample"
+    episode_count = 10
+    df = "training_data_cassandra"
     batch_size = 32
     
     agent = QAgent(window_size)
@@ -23,12 +23,12 @@ def main():
     start_time = time.time()
 
     # Note the rewards and downtime per episode
-    with open(r'downtime_reward.csv', 'w') as f:
+    with open(r'cassandra_downtime_reward.csv', 'w') as f:
         writer = csv.writer(f)
         writer.writerow(['rewards_per_episode', 'downtime_per_episode'])
 
     # Note disk_space every iteration
-    with open(r'disk_space.csv', 'w') as f:
+    with open(r'cassandra_disk_space.csv', 'w') as f:
         writer = csv.writer(f)
         writer.writerow(['timeslot', 'disk_space'])
 
@@ -50,7 +50,7 @@ def main():
             state = next_state
             disk_usage_data = next_disk_space
             
-            with open(r'disk_space.csv', 'a') as f:
+            with open(r'cassandra_disk_space.csv', 'a') as f:
                 writer = csv.writer(f)
                 writer.writerow([t, allocated_disk_space])
 
@@ -61,17 +61,21 @@ def main():
                 print("-------------------------------------------------------------------------")
                 print("Total reward for this episode: {0}".format(cumulative_reward))
                 print("-------------------------------------------------------------------------")
-                with open(r'downtime_reward.csv', 'a') as f:
+                with open(r'cassandra_downtime_reward.csv', 'a') as f:
                     writer = csv.writer(f)
                     writer.writerow([cumulative_reward, agent.get_total_downtime()])
 
-                with open(r'disk_space.csv', 'a') as f:
+                with open(r'cassandra_disk_space.csv', 'a') as f:
                     writer = csv.writer(f)
                     writer.writerow(["-----------------------------------", "--------------------------------------" ])
             
-    if not os.path.exists("models/cassandra_storage_allocator.sav"):
-        os.mkdir("models")
-        agent.model.save("models/cassandra_storage_allocator.sav")
+    if not os.path.exists("models/cassandra_rl_storage_allocator.h5"):
+        try:
+            os.mkdir("models")
+        except FileExistsError:
+            print("Models folder already exists")
+
+        agent.model.save("models/cassandra_rl_storage_allocator.h5")
 
     end_time = time.time()
     train_time = end_time - start_time
