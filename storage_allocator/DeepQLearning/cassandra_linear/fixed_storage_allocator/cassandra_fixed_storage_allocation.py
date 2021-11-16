@@ -36,7 +36,7 @@ if __name__ == "__main__":
 
         if disk_difference > 0:
             current_allocated_disk_space += 5000
-            unused_allocated_disk_space = 5000 - disk_difference
+            unused_allocated_disk_space = disk_difference
             total_downtime += 1
             
         #elif disk_difference > 100:
@@ -46,7 +46,7 @@ if __name__ == "__main__":
         #    total_downtime += (tmp * 100) * (1/5000)
             
         elif disk_difference < 0:
-            unused_allocated_disk_space = 5000 - (-1 * disk_difference)
+            unused_allocated_disk_space = (-1 * disk_difference)
             # when the disk difference is less than 0, 
             # application has more allocated disk compared to the required disk space
             # so no disk space allocation required. hence, no downtime
