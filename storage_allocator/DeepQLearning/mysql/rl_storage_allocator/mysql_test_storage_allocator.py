@@ -43,6 +43,10 @@ def main():
             writer = csv.writer(f)
             writer.writerow([t, allocated_disk_space])
 
+        with open(r'rl_storage_mysql_downtime_reward.csv', 'a') as f:
+            writer = csv.writer(f)
+            writer.writerow([cumulative_reward, agent.get_total_downtime()])
+
         if done:
             print("-------------------------------------------------------------------------")
             print("Total cost incurred due to downtime: {0}".format(agent.get_total_downtime()))
