@@ -76,7 +76,7 @@ class QAgent:
         self.allocated_disk_space += disk_difference
         print("Increase in the disk space: {}".format(disk_difference))
         if disk_difference >= 0:
-            self.__total_downtime += disk_difference * (1/5000)
+            self.__total_downtime += 1  # 1 second
         else:
             #Ignoring this possibility
             pass
@@ -91,7 +91,8 @@ class QAgent:
         disk_difference = disk_usage_data - self.allocated_disk_space
         self.allocated_disk_space -= disk_difference
         print("Decrease in the disk space: {}".format(disk_difference))
-        self.__total_downtime += disk_difference * (3/500)
+        # self.__total_downtime += disk_difference * (3/500)
+        self.__total_downtime += 30 # 30 second
         print("Downtime: {}".format(self.__total_downtime))
         print("Decrease : {}".format(self.allocated_disk_space))
         return self.allocated_disk_space
