@@ -25,7 +25,7 @@ def main():
     # Note the rewards and downtime per episode
     with open(r'downtime_reward.csv', 'w') as f:
         writer = csv.writer(f)
-        writer.writerow(['rewards_per_episode', 'downtime_per_episode'])
+        writer.writerow(['rewards', 'downtime'])
 
     # Note disk_space every iteration
     with open(r'disk_space_training_model.csv', 'w') as f:
