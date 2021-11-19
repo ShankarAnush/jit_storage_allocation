@@ -65,8 +65,18 @@ class StorageAllocator(gym.Env):
                 reward = -10 # -10€
             else:
                 reward = -10 # -10€
-        elif diff >= 5000:
-            reward = -10 # -10€
+        # the difference between the allocated and required could be -ve in case Kafka reaches the retention size
+        # this difference will be minimum of -800,000 KB. I.e., approximately 800 MB
+        elif diff <= -800000:
+            # When there is a transition from retention to segment size, no chance for action 0 or action 1
+            if action == 0 and allocated_disk_space is not None: # no difference in disk space
+                reward = -10 # -10€
+            elif action == 1 and allocated_disk_space is not None: # +ve difference in disk space
+                reward = -10 # -10€
+            elif action == 2 and allocated_disk_space is not None: # -ve difference in disk space
+                reward = 1 # -10€
+            else:
+                reward = -10 # -10€
         else:
             reward = -10 # -10€
 

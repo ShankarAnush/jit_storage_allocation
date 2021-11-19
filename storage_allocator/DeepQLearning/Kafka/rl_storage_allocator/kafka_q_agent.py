@@ -75,8 +75,8 @@ class QAgent:
         disk_difference = disk_usage_data - self.allocated_disk_space
         self.allocated_disk_space += disk_difference
         print("Increase in the disk space: {}".format(disk_difference))
-        if disk_difference >= 0:
-            self.__total_downtime += disk_difference * (1/5000)
+        if disk_difference > 0:
+            self.__total_downtime += 1  # downtime is a fixed value for whatever the increase is in disk usage
         else:
             #Ignoring this possibility
             pass
@@ -91,7 +91,7 @@ class QAgent:
         disk_difference = disk_usage_data - self.allocated_disk_space
         self.allocated_disk_space -= disk_difference
         print("Decrease in the disk space: {}".format(disk_difference))
-        self.__total_downtime += disk_difference * (3/500)
+        self.__total_downtime += 40 # 40 seconds of downtime during transition from retention size to segment size
         print("Downtime: {}".format(self.__total_downtime))
         print("Decrease : {}".format(self.allocated_disk_space))
         return self.allocated_disk_space
