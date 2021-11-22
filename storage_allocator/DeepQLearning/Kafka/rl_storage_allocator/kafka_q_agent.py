@@ -1,4 +1,4 @@
-import numpy as np
+ import numpy as np
 import gym
 import matplotlib.pyplot as plt
 import random
@@ -37,7 +37,7 @@ class QAgent:
         model.add(Dense(units = 32, input_dim = self.state_size, activation = "relu"))
         model.add(Dense(units=8, activation = "relu"))
         model.add(Dense(units = self.action_size, activation = "linear"))
-        model.compile(loss = "mse", optimizer = "adam")
+        model.compile(loss = "mse", optimizer = Adam(lr=0.001))
         return model
 
     def reset(self):
