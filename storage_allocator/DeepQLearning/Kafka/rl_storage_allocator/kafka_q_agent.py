@@ -51,6 +51,8 @@ class QAgent:
         else:
             actions = self.model.predict(state)
             action = np.argmax(actions[0])
+        #print("Printing state")
+        #print(self.model.predict(state))
 
 
         if action  == 0: # do nothing
@@ -73,7 +75,8 @@ class QAgent:
     def increase(self, disk_usage_data):
         self.__available_disk.append(disk_usage_data)
         disk_difference = disk_usage_data - self.allocated_disk_space
-        self.allocated_disk_space += disk_difference
+
+        #self.allocated_disk_space += disk_difference
         print("Increase in the disk space: {}".format(disk_difference))
         if disk_difference > 0:
             self.__total_downtime += 1  # downtime is a fixed value for whatever the increase is in disk usage
@@ -89,7 +92,7 @@ class QAgent:
     def decrease(self, disk_usage_data):
         self.__available_disk.pop(0)
         disk_difference = disk_usage_data - self.allocated_disk_space
-        self.allocated_disk_space -= disk_difference
+        #self.allocated_disk_space -= disk_difference
         print("Decrease in the disk space: {}".format(disk_difference))
         self.__total_downtime += 40 # 40 seconds of downtime during transition from retention size to segment size
         print("Downtime: {}".format(self.__total_downtime))
@@ -108,6 +111,8 @@ class QAgent:
         for i in range(l-batch_size + 1, l):
             mini_batch.append(self.memory[i])
 
+        avg_predicted_value = 0
+
         for state, action, reward, next_state, done in mini_batch:
             if done:
                 target = reward
@@ -115,8 +120,32 @@ class QAgent:
                 next_q_values = self.model.predict(next_state)[0]
                 target = reward + self.gamma * np.amax(next_q_values)
             predicted_target = self.model.predict(state)
+            #print("next_q_values:{}".format(predicted_target))
+            #print("state:{}".format(state))
             predicted_target[0][action] = target
+            #print(target)
+            avg_predicted_value += target
             self.model.fit(state, predicted_target, epochs = 1, verbose = 0)
+        #print(avg_predicted_value/len(mini_batch))
+        #print(len(mini_batch))
+        for state in mini_batch:
+            print(self.model.predict(state))
+        if avg_predicted_value > 0:
+
+            if action == 1:
+                self.allocated_disk_space += (avg_predicted_value/len(mini_batch))
+            elif action == 2:
+                self.allocated_disk_space -= (avg_predicted_value/len(mini_batch))
+            else:
+                self.allocated_disk_space += 0
+            # no change in the allocated disk space
+        else:
+            if action == 1:
+                self.allocated_disk_space += -(avg_predicted_value/len(mini_batch))
+            elif action == 2:
+                self.allocated_disk_space -= -(avg_predicted_value/len(mini_batch))
+            else:
+                self.allocated_disk_space += 0
 
         if self.epsilon > self.min_epsilon:
             self.epsilon *= self.decay_rate

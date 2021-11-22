@@ -27,6 +27,7 @@ class StorageAllocator(gym.Env):
         for t in range(len(data)):
             state = self.get_state(data, t, window_size + 1)
             processed_data.append(state)
+        print("processsed_data: {}".format(processed_data))
         return processed_data
 
 
@@ -36,6 +37,7 @@ class StorageAllocator(gym.Env):
         res = []
         for i in range(n-1):
             res.append(block[i+1] - block[i])
+        #print("state:{}".format(res))
         return np.array([res])
 
     def reset(self):
@@ -54,7 +56,10 @@ class StorageAllocator(gym.Env):
         
         print("Actual_disk_space: {}".format(current_disk_space))
         print("allocated_disk_space: {}".format(allocated_disk_space))
-        diff = current_disk_space - allocated_disk_space
+        if allocated_disk_space < 0:
+            diff = current_disk_space + allocated_disk_space
+        else:
+            diff = current_disk_space - allocated_disk_space
         
         if diff >= 0 and diff < 5000:
             if action == 0 and allocated_disk_space is not None: # no difference in disk space

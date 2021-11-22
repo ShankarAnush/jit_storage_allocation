@@ -12,8 +12,8 @@ import csv
 
 def main():
     window_size = 10
-    episode_count = 1
-    df = "training_data_kafka"
+    episode_count = 100
+    df = "sample_data_kafka"
     batch_size = 32
     
     agent = QAgent(window_size)
@@ -45,6 +45,7 @@ def main():
             
             if len(agent.memory) > batch_size:
                 agent.experience_replay(batch_size = batch_size)
+                print("I'm replaying the experience")
             
             cumulative_reward += reward
             state = next_state
@@ -69,9 +70,9 @@ def main():
                     writer = csv.writer(f)
                     writer.writerow(["-----------------------------------", "--------------------------------------" ])
             
-    if not os.path.exists("models/rl_storage_allocator.h5"):
+    if not os.path.exists("models/kafka_rl_storage_allocator.h5"):
         os.mkdir("models")
-        agent.model.save("models/rl_storage_allocator.h5")
+        agent.model.save("models/kafka_rl_storage_allocator.h5")
 
     end_time = time.time()
     train_time = end_time - start_time
