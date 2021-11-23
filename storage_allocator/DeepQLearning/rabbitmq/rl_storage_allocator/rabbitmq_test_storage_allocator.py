@@ -4,13 +4,13 @@ from tensorflow import keras
 from tensorflow.keras import models
 from tensorflow.keras.models import load_model
 
-from kafka_q_agent import QAgent
-from kafka_storage_allocator import StorageAllocator
+from rabbitmq_q_agent import QAgent
+from rabbitmq_storage_allocator import StorageAllocator
 import matplotlib.pyplot as plt
 
 def main():
-    test_file = "kafka_testing_data"
-    model_name = "kafka_rl_storage_allocator.h5"
+    test_file = "rabbitmq_testing_data"
+    model_name = "rabbitmq_rl_storage_allocator.h5"
 
     model = load_model("./models/" + model_name)
     window_size = model.layers[0].input.shape.as_list()[1]
@@ -21,11 +21,11 @@ def main():
     state, disk_usage_data = storage_allocator.reset()
     cumulative_reward = 0
 
-    with open(r'rl_storage_kafka_downtime_reward.csv', 'w') as f:
+    with open(r'rl_storage_rabbitmq_downtime_reward.csv', 'w') as f:
         writer = csv.writer(f)
         writer.writerow(['rewards', 'downtime'])
 
-    with open(r'rl_storage_kafka_disk_space.csv', 'w') as f:
+    with open(r'rl_storage_rabbitmq_disk_space.csv', 'w') as f:
         writer = csv.writer(f)
         writer.writerow(['timeslot', 'disk_space'])
 
@@ -38,11 +38,11 @@ def main():
         state = next_state
         disk_usage_data = next_disk_space
         
-        with open(r'rl_storage_kafka_disk_space.csv', 'a') as f:
+        with open(r'rl_storage_rabbitmq_disk_space.csv', 'a') as f:
             writer = csv.writer(f)
             writer.writerow([t, allocated_disk_space])
 
-        with open(r'rl_storage_kafka_downtime_reward.csv', 'a') as f:
+        with open(r'rl_storage_rabbitmq_downtime_reward.csv', 'a') as f:
             writer = csv.writer(f)
             writer.writerow([cumulative_reward, agent.get_total_downtime()])
 
@@ -54,7 +54,7 @@ def main():
             print("Total reward for this episode: {0}".format(cumulative_reward))
             print("-------------------------------------------------------------------------")
 
-            with open(r'rl_storage_kafka_downtime_reward.csv', 'a') as f:
+            with open(r'rl_storage_rabbitmq_downtime_reward.csv', 'a') as f:
                 writer = csv.writer(f)
                 writer.writerow([cumulative_reward, agent.get_total_downtime()])
     plot(storage_allocator.data, agent.action_history, agent.get_total_downtime())
@@ -84,4 +84,5 @@ def plot(data, action_data, downtime):
 
 if __name__ == "__main__":
     main()
+
 
