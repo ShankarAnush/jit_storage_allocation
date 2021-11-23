@@ -13,7 +13,7 @@ import csv
 def main():
     window_size = 10
     episode_count = 100
-    df = "sample_data_kafka"
+    df = "kafka_testing_data"
     batch_size = 32
     
     agent = QAgent(window_size)
