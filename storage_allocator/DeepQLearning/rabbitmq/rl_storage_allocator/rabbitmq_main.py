@@ -1,5 +1,5 @@
-from kafka_q_agent import QAgent
-from kafka_storage_allocator import StorageAllocator
+from rabbitmq_q_agent import QAgent
+from rabbitmq_storage_allocator import StorageAllocator
 import time
 import os
 import numpy as np
@@ -12,7 +12,7 @@ import csv
 
 def main():
     window_size = 10
-    episode_count = 1
+    episode_count = 100
     df = "training_data_rabbitmq"
     batch_size = 32
     
