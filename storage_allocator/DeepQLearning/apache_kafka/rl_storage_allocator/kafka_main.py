@@ -45,7 +45,6 @@ def main():
             
             if len(agent.memory) > batch_size:
                 agent.experience_replay(batch_size = batch_size)
-                print("I'm replaying the experience")
             
             cumulative_reward += reward
             state = next_state
