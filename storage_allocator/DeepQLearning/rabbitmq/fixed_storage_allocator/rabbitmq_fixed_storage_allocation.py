@@ -1,13 +1,14 @@
 import pickle
 import csv
 import math
-from tensorflow import keras
-from keras import models
-from models import load_model
+import pandas as pd
+import numpy as np
 
 
 if __name__ == "__main__":
-    model = load_model('./models/Kafka_Model.h5')
+    #model = load_model('./models/Kafka_Model.h5')
+    df = pd.read_csv('.raw_data/rabbitmq_testing_data.csv')
+    disk_usage = df['']
     current_allocated_disk_space = 0
     required_disk_space = 0
     unused_allocated_disk_space = 0
