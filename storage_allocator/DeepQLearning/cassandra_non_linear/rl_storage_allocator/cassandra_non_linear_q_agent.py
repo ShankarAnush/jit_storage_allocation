@@ -30,7 +30,7 @@ class QAgent:
         self.decay_rate = 0.995
 
         self.model = load_model("models/" + model_name) if is_eval else self.create_model()
-        self.dqn = load_model("../../../../prediction_models/RabbitMQ_model.h5")
+        self.dqn = load_model("../../../../prediction_models/cassandra_oscil_model.h5")
 
 
     def create_model(self):

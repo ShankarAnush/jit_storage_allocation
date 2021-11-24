@@ -7,8 +7,8 @@ import numpy as np
 
 if __name__ == "__main__":
     #model = load_model('./models/Kafka_Model.h5')
-    df = pd.read_csv('./raw_data/rabbitmq_testing_data.csv')
-    disk_usage = df['rabbitmq_model'].tolist()
+    df = pd.read_csv('../raw_data/cassandra_non_linear_testing_data.csv')
+    disk_usage = df['cassandra_non_linear_model'].tolist()
     current_allocated_disk_space = 0
     required_disk_space = 0
     unused_allocated_disk_space = 0
@@ -17,7 +17,7 @@ if __name__ == "__main__":
     counter = 0
 
     # Note the allocated disk space, unused allocated disk space and downtime
-    with open(r'rabbitmq_fixed_storage_allocation.csv', 'w') as f:
+    with open(r'cassandra_non_linear_fixed_storage_allocation.csv', 'w') as f:
         writer = csv.writer(f)
         writer.writerow(['current_allocated_disk_space', 'unused_allocated_disk_space', 'total_downtime', 'original_value'])
 
@@ -34,12 +34,13 @@ if __name__ == "__main__":
         disk_difference = required_disk_space - current_allocated_disk_space
 
         if disk_difference > 0:
-            current_allocated_disk_space += 5000 # 5 KB in case of rabbitmq
+            current_allocated_disk_space += 5 # 5 MB, scaling in case of cassandra_non_linear
             unused_allocated_disk_space = disk_difference
             total_downtime += 1 
             
         elif disk_difference < 0:
             unused_allocated_disk_space = (-1 * disk_difference)
+            total_downtime += 40
             # when the disk difference is less than 0, 
             # application has more allocated disk compared to the required disk space
             # so no disk space allocation required. hence, no downtime
@@ -48,7 +49,7 @@ if __name__ == "__main__":
         else:
             pass   # disk space remains to be constant
 
-        with open(r'rabbitmq_fixed_storage_allocation.csv', 'a') as f:
+        with open(r'cassandra_non_linear_fixed_storage_allocation.csv', 'a') as f:
             writer = csv.writer(f)
             writer.writerow([current_allocated_disk_space, unused_allocated_disk_space, total_downtime, disk_usage[i] ])
 

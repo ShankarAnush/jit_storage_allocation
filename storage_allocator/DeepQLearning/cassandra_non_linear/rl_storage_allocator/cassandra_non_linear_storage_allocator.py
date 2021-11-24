@@ -16,7 +16,7 @@ class StorageAllocator(gym.Env):
 
     def get_data(self, dataset):
         vec = []
-        lines = open("./raw_data/" + dataset + ".csv","r").read().splitlines()
+        lines = open("../raw_data/" + dataset + ".csv","r").read().splitlines()
         for l in lines[1:]:
             vec.append(float(l.split(',')[0]))
         return vec
@@ -56,7 +56,7 @@ class StorageAllocator(gym.Env):
         print("allocated_disk_space: {}".format(allocated_disk_space))
         diff = current_disk_space - allocated_disk_space
         
-        if diff >= 0 and diff < 5000:
+        if diff >= 0 and diff < 5:
             if action == 0 and allocated_disk_space is not None: # no difference in disk space
                 reward = 0 # 1€ 
             elif action == 1 and allocated_disk_space is not None: # +ve difference in disk space
@@ -67,7 +67,7 @@ class StorageAllocator(gym.Env):
                 reward = -10 # -10€
         # the difference between the allocated and required could be -ve in case Kafka reaches the retention size
         # this difference will be minimum of -800,000 KB. I.e., approximately 800 MB
-        elif diff <= -800000:
+        elif diff <= -5:
             # When there is a transition from retention to segment size, no chance for action 0 or action 1
             if action == 0 and allocated_disk_space is not None: # no difference in disk space
                 reward = -10 # -10€
