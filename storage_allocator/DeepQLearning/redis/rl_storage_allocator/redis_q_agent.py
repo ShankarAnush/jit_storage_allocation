@@ -30,7 +30,7 @@ class QAgent:
         self.decay_rate = 0.995
 
         self.model = load_model("models/" + model_name) if is_eval else self.create_model()
-        self.dqn = load_model("../../../../prediction_models/RabbitMQ_model.h5")
+        self.dqn = load_model("../../../../prediction_models/Redis_model.h5")
 
 
     def create_model(self):
@@ -94,7 +94,10 @@ class QAgent:
         print(self.dqn.predict([[[self.allocated_disk_space]]]).item())
         self.allocated_disk_space -= disk_difference
         print("Decrease in the disk space: {}".format(disk_difference))
-        self.__total_downtime += 40 # 40 seconds of downtime during transition from retention size to segment size
+        if disk_difference < -65:
+            self.__total_downtime += 40 # 40 seconds of downtime during transition from retention size to segment size
+        else:
+            self.__total_downtime += 1
         print("Downtime: {}".format(self.__total_downtime))
         print("Decrease : {}".format(self.allocated_disk_space))
         return self.allocated_disk_space
