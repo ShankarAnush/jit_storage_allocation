@@ -1,11 +1,12 @@
 # Just-in-time Storage Allocation
 ### Acronyms: 
-RL - Reinforcement Learning
-RDS - Required Disk Space
-ADS - Allocated Disk Space
-RLSA - Reinforcement Learning based Storage Allocator
-GSA - Greedy Storage Allocator
-
+<ul>
+        <li> RL - Reinforcement Learning </li>
+        <li> RDS - Required Disk Space </li>
+        <li> ADS - Allocated Disk Space </li>
+        <li> RLSA - Reinforcement Learning based Storage Allocator </li>
+        <li> GSA - Greedy Storage Allocator </li>
+</ul>
         
 ## Summary
 Storage as one of the resource allocation is gaining attention from recent days. Even small and mid-size organizations are choosing storage virtualization to reduce their CAPEX and OPEX. Understanding the behavior of the application to decide on the pattern of its disk usage is quintessential for knowing its storage requirements. Understanding the dynamics of the application also helps in choosing one of the applications from the pool of similar application. This thesis focuses on two phases, namely -- Benchmarking stateful application and designing RL based storage allocator. Apache Kafka, Apache Cassandra, MySQL, Redis and RabbitMQ were the five applications benchmarked. The applications were represented in both compressed and uncompressed formats. These applications were classified into four different classes based on their behavior, namely -- Bounded, Bounded and Oscillating, Unbounded, Unbounded and Oscillating. RabbitMQ was classified into Bounded, Kafka into Bounded and Oscillating, MySQL and Cassandra (uncompressed) were classified into Unbounded, and Redis and Cassandra (compressed) were classified into Unbounded and Oscillating. Regression and LSTM models were built to represent the classes. The model built was used as an input instead of the actual benchmarked data, so that the RL agent could be trained indefinitely. Current day storage allocation uses either static allocation techniques or Thick Provisioning. Either of them do not tend to optimize the Downtime and the Unused Disk Space of an application. A RL agent is trained to achieve this objective of optimizing the Downtime and the Unused Disk Space by deciding on a reward policy. The agent transitions from one state to another by choosing an action. The policy designed helps the agent to choose the best possible action from the set of available actions. An appropriate reward is given for the action taken by the agent. Four RL based storage allocators were implemented for four classes of stateful applications. The built RL agents prioritize the metric the Unused Disk Space over the Downtime of the application. Four gsa were designed that dynamically allocates the storage space, but that follows Thick Provisioning.
