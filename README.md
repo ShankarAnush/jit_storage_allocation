@@ -6,6 +6,7 @@
         <li> ADS - Allocated Disk Space </li>
         <li> RLSA - Reinforcement Learning based Storage Allocator </li>
         <li> GSA - Greedy Storage Allocator </li>
+        <li> CAPEX - Capital Expenditures </li>
 </ul>
         
 ## Summary
